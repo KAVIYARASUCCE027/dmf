@@ -1,0 +1,203 @@
+## Experiment: Recovery and Analysis of Deleted Files from a USB Drive
+
+**Your setup:** Windows 11, 64 GB USB drive (NTFS), PhotoRec.
+
+### Step 1: Create a recovery folder
+
+Open **CMD as Administrator**.
+
+```cmd
+mkdir "C:\DMF\Recovered"
+```
+
+### Step 2: Prepare the USB drive
+
+Find your USB drive letter in File Explorer. Assuming it is `E:`, execute:
+
+```cmd
+mkdir E:\DMF_TEST
+```
+
+Create a sample file:
+
+```cmd
+echo Digital Forensics Recovery Experiment > E:\DMF_TEST\sample.txt
+```
+
+Verify the file:
+
+```cmd
+type E:\DMF_TEST\sample.txt
+```
+
+**Note:** If `sample.txt` is already deleted and you want to recover it, skip Steps 2 and 3. Do not write anything new to the USB.
+
+### Step 3: Delete the sample file
+
+```cmd
+del E:\DMF_TEST\sample.txt
+```
+
+Verify deletion:
+
+```cmd
+dir E:\DMF_TEST
+```
+
+**Expected:** File Not Found.
+
+Do not copy anything else onto the USB drive after deletion.
+
+### Step 4: Open PhotoRec
+
+Navigate to your extracted TestDisk folder.
+
+For example:
+
+```cmd
+cd /d "C:\DMF\Exp 2\TestDisk"
+```
+
+Launch PhotoRec:
+
+```cmd
+photorec_win.exe
+```
+
+If the executable is in another folder, use its actual path. Run CMD as Administrator.
+
+### Step 5: Select your USB drive
+
+In PhotoRec, use the arrow keys.
+
+Select:
+
+```text
+Disk \\.\PhysicalDrive1 - 62 GB / 58 GiB
+VendorCo ProductCode
+```
+
+Then select:
+
+```text
+[Proceed]
+```
+
+Press `Enter`.
+
+**Do not select PhysicalDrive0 (512 GB Samsung SSD).**
+
+### Step 6: Select the partition
+
+Select:
+
+```text
+1 * HPFS - NTFS
+```
+
+Then:
+
+```text
+[Search]
+```
+
+Press `Enter`.
+
+### Step 7: Select filesystem
+
+Choose:
+
+```text
+[Other]
+```
+
+Press `Enter`.
+
+### Step 8: Select scan mode
+
+Choose:
+
+```text
+[Free]
+```
+
+Press `Enter`.
+
+This scans unallocated space for deleted files.
+
+### Step 9: Select recovery destination
+
+Navigate to:
+
+```text
+C:\DMF\Recovered
+```
+
+Use:
+- `↑ ↓` — Select folders
+- `Enter` — Open folder
+- `..` — Go to parent directory
+- `C` — Confirm destination
+
+**Press `C` when the screen shows `Directory C:\DMF\Recovered`.**
+
+### Step 10: Recover deleted files
+
+PhotoRec starts scanning automatically.
+
+Wait until the scan completes.
+
+Recovered files are normally stored in:
+
+```text
+C:\DMF\Recovered\recup_dir.1
+```
+
+### Step 11: Verify recovered files
+
+Open CMD and execute:
+
+```cmd
+dir "C:\DMF\Recovered" /s
+```
+
+To display recovered filenames:
+
+```cmd
+dir "C:\DMF\Recovered" /s /b
+```
+
+To count recovered files:
+
+```cmd
+dir "C:\DMF\Recovered" /s /a-d
+```
+
+Check the total file count at the bottom.
+
+**Important:** PhotoRec may not recover `sample.txt` because ordinary TXT files lack a reliable file signature. If TXT recovery fails, use TestDisk's `Advanced → Undelete` feature for your NTFS USB drive.
+
+### Step 12: Record output
+
+```text
+Experiment: Recovery of Deleted Files from USB
+
+Tool Used       : PhotoRec
+USB Capacity    : 64 GB
+Filesystem      : NTFS
+Partition       : PhysicalDrive1
+Scan Mode       : Free
+Recovery Folder : C:\DMF\Recovered
+Recovered Files : ______
+Recovery Status : ______
+```
+
+### Screenshots to take
+
+1. USB drive selection
+2. NTFS partition selection
+3. Free scan selection
+4. Recovery progress
+5. Recovered files folder
+
+**Result:** Deleted files were scanned using PhotoRec, and the recovered data was examined to determine the number, type, and recovery status of files.
