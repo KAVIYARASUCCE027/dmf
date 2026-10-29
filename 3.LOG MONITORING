@@ -1,0 +1,58 @@
+Open Windows PowerShell as Administrator and execute these commands one by one.
+Step 1: Check the Windows Security Log
+Get-WinEvent -LogName Security -MaxEvents 20
+
+This displays the latest 20 security events.
+Step 2: Generate Failed Login Attempts
+1. Press Windows + L to lock your laptop.
+2. Enter an incorrect password 3 times.
+3. Unlock your laptop using the correct password or PIN.
+4. Return to PowerShell.
+Note: Failed PIN attempts may not generate Event ID 4625. Password-based authentication failures are more suitable for this experiment. Avoid repeated attempts if your account has a lockout policy.
+Step 3: Find Failed Login Events (Event ID 4625)
+Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4625} -MaxEvents 20
+
+This displays the latest 20 failed login events.
+
+If no matching events exist, PowerShell may display:
+No events were found that match the specified selection criteria.
+
+Step 4: Count Failed Login Attempts and Generate an Alert
+Copy and execute this complete block:
+$events = @(Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4625} -MaxEvents 20 -ErrorAction SilentlyContinue)
+
+$count = $events.Count
+
+Write-Host "Total Failed Login Attempts: $count"
+
+if ($count -ge 3) {
+    Write-Host "ALERT: Suspicious Activity Detected!" -ForegroundColor Red
+}
+else {
+    Write-Host "No Suspicious Activity Detected" -ForegroundColor Green
+}
+
+Example output:
+Total Failed Login Attempts: 3
+
+ALERT: Suspicious Activity Detected!
+
+The actual count depends on your Windows Security log.
+
+This experiment treats three or more failed logins as suspicious, although that threshold alone does not prove malicious activity.
+Step 5: Create a Folder for Forensic Evidence
+New-Item -ItemType Directory -Path "C:\DMF\Exp3" -Force
+
+This creates:
+C:\DMF\Exp3
+
+Step 6: Export Failed Login Events to CSV
+$events | Select-Object TimeCreated, Id, ProviderName, MachineName, Message | Export-Csv "C:\DMF\Exp3\forensic_events.csv" -NoTypeInformation
+
+The CSV file will be saved at:
+C:\DMF\Exp3\forensic_events.csv
+
+Step 7: Verify the Exported CSV File
+Import-Csv "C:\DMF\Exp3\forensic_events.csv" | Format-Table -AutoSize
+
+This displays the recorded security events.
