@@ -1,0 +1,139 @@
+Step 1: Start the Android emulator
+Since Android Studio is already open:
+1. Click Tools → Device Manager (or View → Tool Windows → Device Manager).
+2. If you already have a virtual device such as Pixel, click the  Play button.
+3. If you don't have a device, click Create Virtual Device.
+4. Select a Pixel phone, choose an available Android system image, and finish setup.
+5. Start the virtual device.
+You should see a virtual Android phone booted to its home screen. Keep it running throughout the experiment. 
+Android Developers
+
+Step 2: Open Command Prompt and verify ADB
+Press Windows + R, type cmd, and press Enter.
+
+Navigate to the Android SDK Platform Tools folder:
+cd /d "%LOCALAPPDATA%\Android\Sdk\platform-tools"
+
+
+Now check the ADB version:
+adb version
+
+
+Expected output will look similar to:
+Android Debug Bridge version 1.0.41
+Version 36.x.x
+
+
+The version number may differ.
+
+If the folder does not exist, check the SDK location in Android Studio's SDK Manager and install Android SDK Platform-Tools if necessary.
+Step 3: Check Android emulator connection
+Run:
+adb devices
+
+
+Expected output:
+List of devices attached
+emulator-5554    device
+
+
+Your emulator number may be different.
+
+If you see device, your emulator is connected successfully. 
+Android Developers
+
+Step 4: Collect Android device information
+Execute these commands one by one.
+
+Check Android version:
+adb shell getprop ro.build.version.release
+
+
+Check device model:
+adb shell getprop ro.product.model
+
+
+Check manufacturer:
+adb shell getprop ro.product.manufacturer
+
+
+Record whatever values appear on your laptop for your observation table.
+Step 5: Create a sample TXT file
+We'll use the C:\DMF directory that you used for your earlier forensic experiments.
+
+First, create a folder:
+mkdir "C:\DMF\MobileForensicsLab"
+
+
+Now create sample.txt:
+echo Digital Forensics Lab Sample > "C:\DMF\MobileForensicsLab\sample.txt"
+
+
+Verify its contents:
+type "C:\DMF\MobileForensicsLab\sample.txt"
+
+
+Expected output:
+Digital Forensics Lab Sample
+
+
+Your laptop now contains:
+C:\DMF\MobileForensicsLab
+  └── sample.txt
+
+
+Step 6: Transfer the file into the Android emulator
+This is the ADB PUSH operation.
+adb push "C:\DMF\MobileForensicsLab\sample.txt" /sdcard/Download/sample.txt
+
+
+Press Enter.
+
+You should see a transfer message indicating that one file was pushed successfully.
+
+This means your file is now inside the virtual Android device.
+Step 7: Verify that the file exists in Android
+Run:
+adb shell ls -l /sdcard/Download/sample.txt
+
+
+This displays the file's details.
+
+Now read the file's contents:
+adb shell cat /sdcard/Download/sample.txt
+
+
+Expected output:
+Digital Forensics Lab Sample
+
+
+This confirms the file is present and readable inside the emulator.
+Step 8: Extract the file from Android to your laptop
+Now comes the main forensic extraction step: ADB PULL.
+
+Execute:
+adb pull /sdcard/Download/sample.txt "C:\DMF\MobileForensicsLab\extracted_sample.txt"
+
+
+After a successful transfer, open:
+C:\DMF\MobileForensicsLab
+
+
+You should see:
+MobileForensicsLab
+  ├── sample.txt
+  └── extracted_sample.txt
+
+
+Open extracted_sample.txt and verify its contents.
+Step 9: Calculate SHA-256 hashes
+We will compare the original and extracted files.
+
+Original file hash:
+certutil -hashfile "C:\DMF\MobileForensicsLab\sample.txt" SHA256
+
+
+You will see a 64-character hexadecimal SHA-256 hash.
+
+Extracted file hash:
+certutil -hashfile "C:\DMF\MobileForensicsLab\extracted_sample.txt" SHA256
