@@ -1,0 +1,172 @@
+Bro! 🔥 Now we're going to perform your Digital Forensics Experiment: Extraction and Analysis of Image Metadata using ExifTool on Windows 11.
+
+You already have the image, so we'll use it directly. No need to rename or move your image.
+
+Your image location:
+
+```
+C:\Users\mkavi\OneDrive\Pictures\goku-cosmic-evolution-nw-1366x768.jpg
+```
+
+## Step 1: Download ExifTool
+
+1. Open Chrome.
+2. Visit [Official ExifTool Website](https://exiftool.org/?utm_source=chatgpt.com).
+3. Find Windows Executable.
+4. Download the 64-bit Windows ZIP.
+5. Right-click the downloaded ZIP and select Extract All.
+
+Inside the extracted folder, you'll find:
+
+```
+exiftool(-k).exe
+exiftool_files
+```
+
+Rename `exiftool(-k).exe` to `exiftool.exe`. Keep the `exiftool_files` folder alongside the executable.&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://exiftool.org\&sz=32)
+
+exiftool.org
+
+
+
+## Step 2: Create the ExifTool folder
+
+1. Open File Explorer.
+2. Navigate to `C:`.
+3. Create a folder named `DMF`.
+4. Inside `DMF`, create a folder named `ExifTool`.
+5. Move `exiftool.exe` and `exiftool_files` into it.
+
+Your folder structure should be:
+
+```
+C:\
+ └── DMF
+      └── ExifTool
+           ├── exiftool.exe
+           └── exiftool_files
+```
+
+## Step 3: Open Command Prompt
+
+1. Press `Windows + R`.
+2. Type `cmd`.
+3. Press `Enter`.
+
+Now type:
+
+```
+cd /d "C:\DMF\ExifTool"
+```
+
+Press `Enter`.
+
+Verify ExifTool works by typing:
+
+```
+exiftool -ver
+```
+
+You should see a version number.
+
+## Step 4: Extract metadata from your Goku image
+
+Copy and paste this exact command into Command Prompt:
+
+```
+exiftool "C:\Users\mkavi\OneDrive\Pictures\goku-cosmic-evolution-nw-1366x768.jpg"
+```
+
+&#x20;Copy command
+
+Press `Enter`.
+
+ExifTool will display the available image metadata.
+
+### Example output
+
+Illustrative output — actual values will depend on your image.
+
+File Name : goku-cosmic-evolution-nw-1366x768.jpg
+
+File Type : JPEG
+
+MIME Type : image/jpeg
+
+Image Width : 1366
+
+Image Height : 768
+
+File Size : (actual value)
+
+File Modification Date/Time : (actual value)
+
+The image dimensions may be 1366 × 768 as suggested by the filename, but verify them from the actual ExifTool output.
+
+## Step 5: Extract specific forensic metadata
+
+To display important metadata fields, execute:
+
+```
+exiftool -FileName -FileSize -FileType -MIMEType -ImageWidth -ImageHeight -FileCreateDate -FileModifyDate -DateTimeOriginal -Make -Model "C:\Users\mkavi\OneDrive\Pictures\goku-cosmic-evolution-nw-1366x768.jpg"
+```
+
+To view metadata grouped by category, execute:
+
+```
+exiftool -a -G1 -s "C:\Users\mkavi\OneDrive\Pictures\goku-cosmic-evolution-nw-1366x768.jpg"
+```
+
+## Step 6: Save the metadata as forensic evidence
+
+Execute this command:
+
+```
+exiftool "C:\Users\mkavi\OneDrive\Pictures\goku-cosmic-evolution-nw-1366x768.jpg" > "C:\DMF\image_metadata.txt"
+```
+
+This creates:
+
+```
+C:\DMF\image_metadata.txt
+```
+
+Open the text file to review the extracted metadata.
+
+## Step 7: Analyze your image metadata
+
+Use the actual ExifTool output to complete your observation table.
+
+| Metadata field         | Observation                           |
+| ---------------------- | ------------------------------------- |
+| File Name              | goku-cosmic-evolution-nw-1366x768.jpg |
+| File Type              | JPEG (verify)                         |
+| MIME Type              | image/jpeg (verify)                   |
+| Image Width            | Check output                          |
+| Image Height           | Check output                          |
+| File Size              | Check output                          |
+| File Creation Date     | Check output                          |
+| File Modification Date | Check output                          |
+| Camera Make            | If available                          |
+| Camera Model           | If available                          |
+
+Important: Since your Goku image may be a downloaded wallpaper, camera details, GPS coordinates, and original capture dates might be absent. That is normal. Windows file creation timestamps may indicate when the file was downloaded or copied, not when the picture was originally made.
+
+Also, because your file is inside OneDrive, ensure it is downloaded locally before running ExifTool.
+
+## Step 8: Screenshots for your lab record
+
+Take screenshots of:
+
+1. The extracted ExifTool folder.
+2. Command Prompt showing the `exiftool -ver` command.
+3. Command Prompt showing the extracted image metadata.
+4. The saved `image_metadata.txt` file.
+
+## Result
+
+The metadata of the selected JPEG image was extracted using ExifTool. The available file properties, timestamps, image dimensions, and other metadata fields were examined to understand their significance in digital forensic investigations.
+
+Bro, first complete Steps 1–4. Then paste the output you get after running the ExifTool command. I'll help you identify the forensic findings and write the observation table using your actual image metadata.
